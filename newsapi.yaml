@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: currentsapi
+  description: api.currentsapi.services
+  version: 2.0.0
+servers:
+- url: https://api.currentsapi.services/v1
+tags:
+- name: news
+  description: News
+paths:
+  /latest-news/:
+    get:
+      tags:
+      - news
+      summary: News List
+      operationId: latestNewsGet
+      
+      
+      parameters:
+      
+      - name: language
+        in: query
+        description: Language in two letters
+        required: true
+        schema:
+          type: string
+      - name: apiKey
+        in: query
+        description: API key
+        required: true
+        schema:
+          type: string
+      
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsList'
+        default:
+          description: enexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+components:
+  schemas:
+    NewsList:
+      required:
+      - totalResults
+      type: object
+      properties:
+        status:
+          type: string
+        totalResults:
+          type: integer
+        articles:
+          type: array
+          items:
+            $ref: '#/components/schemas/News'
+    ErrorModel:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          maximum: 600
+          minimum: 100
+          type: integer
+    News:
+      required:
+      - url
+      type: object
+      properties:
+        source:
+          $ref: '#/components/schemas/Source'
+        author:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+        image:
+          type: string
+        published:
+          type: string
+        language:
+          type: string
+    Source:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
